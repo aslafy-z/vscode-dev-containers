@@ -16,7 +16,7 @@
 
 > **Note:** Inside the container, you will find MongoDB running at `mongo:27017` rather than localhost.
 
-This definition creates two containers, one for Node.js and one for MongoDB. VS Code will attach to the Node.js container, and from within that container the MongoDB container will be available with the hostname `mongo`. The MongoDB instance can be managed via the automatically installed MongoDB extension.
+This definition creates two containers, one for Node.js and one for MongoDB. VS Code will attach to the Node.js container, and from within that container the MongoDB container will be available with the hostname `mongo`. The MongoDB instance can be managed in VS Code via the automatically installed MongoDB extension.
 
 While the definition itself works unmodified, it uses the `mcr.microsoft.com/vscode/devcontainers/javascript-node` image which includes `git`, `eslint`, `zsh`, [Oh My Zsh!](https://ohmyz.sh/), a non-root `vscode` user with `sudo` access, and a set of common dependencies for development. You can pick a different version of this image by updating the `VARIANT` arg in `.devcontainer/docker-compose.yml` to pick either Node.js version 10, 12, or 14.
 
@@ -28,18 +28,18 @@ build:
     VARIANT: 12
 ```
 
- You can connect to the MongoDB from an external tool when connected to the container or Codespace from VS Code by updating `.devcontainer/devcontainer.json` as follows:
+You also can connect to MongoDB from an external tool when using VS Code by updating `.devcontainer/devcontainer.json` as follows:
 
 ```json
 "forwardPorts": [ 27017 ]
 ```
 
-And ensuring that the following is in `.devcontainer/docker-compose.yml`:
+...and ensuring that the following is in `.devcontainer/docker-compose.yml`:
 
 ```Dockerfile
 services:
   web:
-   # ...
+    # ...
     entrypoint: "/usr/local/share/mongo-proxy.sh"
 ```
 
