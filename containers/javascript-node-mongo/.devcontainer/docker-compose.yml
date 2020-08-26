@@ -1,10 +1,6 @@
 version: '3'
 services:
   web:
-    # Uncomment the next line to use a non-root user for all processes.
-    # See https://aka.ms/vscode-remote/containers/non-root for details.
-    # user: node
-
     build: 
       context: .
       dockerfile: Dockerfile
@@ -15,28 +11,37 @@ services:
         USER_UID: 1000
         USER_GID: 1000
 
-    # Use "ports" to publish your web port locally. Consider "forwardPorts" in
-    # devcontainer.json instead if your app only allows connections from localhost. 
-    # ports:
-    #   - 3000:3000
-
     volumes:
       - ..:/workspace:cached
 
+    # [Optional] Allows MongoDB to be accessed from localhost, or forwarded to your local machine when in VS Code.
+    entrypoint: "/usr/local/share/mongo-proxy.sh"
+
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
-    
-    links:
-      - mongo
 
-  # Note: The MongoDB host name is "mongo", not "localhost"
+    # Use the "forwardPorts" property in **devcontainer.json** to forward an app port
+    # locally since the "ports" property in this file will not forward from a Codespace.
+
+    # Uncomment the next line to use a non-root user for all processes.
+    # See https://aka.ms/vscode-remote/containers/non-root for details.
+    # user: node
+
   mongo:
-    image: mongo
+    # Note: The MongoDB host name is "mongo" by default, not "localhost"
+    image: mongo:latest
     restart: unless-stopped
     volumes:
       - /data/db
+    
+    # Uncomment to change startup options
+    # environment:
+    #  MONGO_INITDB_ROOT_USERNAME: root
+    #  MONGO_INITDB_ROOT_PASSWORD: example
+    #  MONGO_INITDB_DATABASE: your-database-here
 
-    # Uncomment to allow access to mongodb from external tools
-    # ports:
-    #   - 27017:27017
+    # To access MongoDB from an external tool when connected from VS Code, add port **27017** 
+    # to the "forwardPorts" property in **devcontainer.json**. Adding the "ports" property to 
+    # this file will not publish the port to your local machine when you connect to a Codespace.
+
 
